@@ -1,0 +1,253 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Self-hosted Inter — latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/inter-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Self-hosted Inter — latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Self-hosted Playfair Display — latin-ext */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/playfair-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Self-hosted Playfair Display — latin */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/playfair-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@layer base {
+  :root {
+    /* Deep Navy as primary */
+    --background: 34 33% 93%;
+    --foreground: 216 67% 15%;
+
+    --card: 34 33% 96%;
+    --card-foreground: 216 67% 15%;
+
+    --popover: 34 33% 96%;
+    --popover-foreground: 216 67% 15%;
+
+    /* Deep Navy */
+    --primary: 216 67% 15%;
+    --primary-foreground: 34 33% 93%;
+
+    /* Warm Ivory */
+    --secondary: 34 33% 93%;
+    --secondary-foreground: 216 67% 15%;
+
+    --muted: 34 15% 88%;
+    --muted-foreground: 0 0% 38%;
+
+    /* Antique Gold accent */
+    --accent: 38 34% 47%;
+    --accent-foreground: 34 33% 96%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 34 15% 82%;
+    --input: 34 15% 82%;
+    --ring: 216 67% 15%;
+
+    --radius: 0.375rem;
+
+    /* Custom tokens */
+    --navy: 216 67% 15%;
+    --charcoal: 0 0% 14%;
+    --ivory: 34 33% 93%;
+    --stone: 0 0% 54%;
+    --gold: 38 45% 26%;
+    --gold-light: 42 42% 50%;
+    --violet: 272 56% 27%;
+    --purple: 272 50% 37%;
+    --clay: 22 52% 35%;
+    --olive: 90 38% 30%;
+
+    --sidebar-background: 216 67% 15%;
+    --sidebar-foreground: 34 33% 93%;
+    --sidebar-primary: 38 34% 47%;
+    --sidebar-primary-foreground: 34 33% 96%;
+    --sidebar-accent: 216 67% 20%;
+    --sidebar-accent-foreground: 34 33% 93%;
+    --sidebar-border: 216 50% 25%;
+    --sidebar-ring: 38 34% 47%;
+  }
+
+  .dark {
+    --background: 216 67% 15%;
+    --foreground: 34 33% 93%;
+
+    --card: 216 60% 18%;
+    --card-foreground: 34 33% 93%;
+
+    --popover: 216 60% 18%;
+    --popover-foreground: 34 33% 93%;
+
+    --primary: 34 33% 93%;
+    --primary-foreground: 216 67% 15%;
+
+    --secondary: 216 50% 22%;
+    --secondary-foreground: 34 33% 93%;
+
+    --muted: 216 40% 25%;
+    --muted-foreground: 34 15% 65%;
+
+    --accent: 38 34% 47%;
+    --accent-foreground: 34 33% 96%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 216 40% 28%;
+    --input: 216 40% 28%;
+    --ring: 34 33% 93%;
+
+    --sidebar-background: 216 67% 12%;
+    --sidebar-foreground: 34 33% 93%;
+    --sidebar-primary: 38 34% 47%;
+    --sidebar-primary-foreground: 34 33% 96%;
+    --sidebar-accent: 216 67% 18%;
+    --sidebar-accent-foreground: 34 33% 93%;
+    --sidebar-border: 216 50% 22%;
+    --sidebar-ring: 38 34% 47%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Playfair Display', serif;
+  }
+
+  /* Prevent iOS zoom on input focus — ensure 16px minimum */
+  input, select, textarea {
+    font-size: 16px;
+  }
+  @media (min-width: 768px) {
+    input, select, textarea {
+      font-size: inherit;
+    }
+  }
+}
+
+@layer utilities {
+  .text-gold {
+    color: hsl(var(--gold));
+  }
+
+  .bg-navy {
+    background-color: hsl(var(--navy));
+  }
+
+  .text-navy {
+    color: hsl(var(--navy));
+  }
+
+  .bg-ivory {
+    background-color: hsl(var(--ivory));
+  }
+
+  .text-ivory {
+    color: hsl(var(--ivory));
+  }
+
+  .bg-gold {
+    background-color: hsl(var(--gold));
+  }
+
+  .border-gold {
+    border-color: hsl(var(--gold));
+  }
+
+  .text-stone {
+    color: hsl(var(--stone));
+  }
+
+  .section-padding {
+    @apply px-6 py-20 md:px-12 lg:px-24 lg:py-28;
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.8s ease-out forwards;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hero-text-backdrop {
+    background: linear-gradient(
+      to right,
+      hsla(210, 20%, 15%, 0.35),
+      transparent 80%
+    );
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    mask-image: linear-gradient(to right, black 48%, transparent 78%);
+    -webkit-mask-image: linear-gradient(to right, black 48%, transparent 78%);
+  }
+}
+
+/* German/long-word hyphenation support */
+html[lang="de"] h1,
+html[lang="de"] h2,
+html[lang="de"] h3,
+html[lang="de"] h4,
+html[lang="de"] p {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}

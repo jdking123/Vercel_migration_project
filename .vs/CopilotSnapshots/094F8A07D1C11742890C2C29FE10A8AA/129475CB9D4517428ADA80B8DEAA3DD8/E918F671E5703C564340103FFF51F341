@@ -1,0 +1,24 @@
+﻿"use client";
+
+import Link, { LinkProps } from "next/link";
+import { useLangPath } from "@/hooks/useLangPath";
+import { cn } from "@/lib/utils";
+import type { ReactNode } from "react";
+
+interface AppLinkProps extends Omit<LinkProps, "href"> {
+    href: string;
+    children: ReactNode;
+    className?: string;
+}
+
+export function AppLink({ href, children, className, ...props }: AppLinkProps) {
+    const { langTo } = useLangPath();
+
+    const target = langTo(href);
+
+    return (
+        <Link href={target} className={cn(className)} {...props}>
+            {children}
+        </Link>
+    );
+}}

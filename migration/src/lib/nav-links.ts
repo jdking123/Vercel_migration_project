@@ -1,0 +1,7 @@
+export const NAV_LINKS = [
+  { key: "nav.home", path: "/" },
+  { key: "nav.about", path: "/about" },
+  { key: "nav.services", path: "/services" },
+  { key: "nav.resources", path: "/resources" },
+  { key: "nav.contact", path: "/contact" },
+] as const;

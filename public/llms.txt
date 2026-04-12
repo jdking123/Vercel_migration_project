@@ -1,0 +1,25 @@
+# JD Product Stewardship Foundation
+
+> The neutral, evidence-based authority that unites industry, regulators, and civil society to define harmonized standards, deliver trusted regulatory intelligence, and build the capabilities of product stewardship professionals worldwide.
+
+## About
+- [/en/about]: The foundation's story, mission, vision, values, leadership team, and advisory board structure.
+
+## Services
+- [/en/services]: Three service pillars — compliance foundation strengthening, regulatory intelligence, and professional capability building.
+
+## Resources
+- [/en/resources]: Downloadable resource library including core regulatory documents, professional development materials, and sector-specific insights.
+
+## Contact
+- [/en/contact]: General inquiry form, email, headquarters location (Montreal, Canada), and LinkedIn.
+
+## Key Information
+- Founded: 2024
+- Mission: To act as the neutral, evidence-based authority that unites industry, regulators, and civil society — defining harmonized standards, delivering trusted regulatory intelligence, and building the capabilities of practitioners worldwide — so that responsible product decisions become the foundation every generation inherits.
+- Sector: Product Stewardship / Environmental Compliance / Regulatory Affairs
+- Headquarters: Montreal, Canada
+- Website: https://jdproductstewardshipfoundation.org
+- Email: info@jdproductstewardshipfoundation.org
+- LinkedIn: https://linkedin.com/company/jdpsf
+- Languages: English, French, Spanish, German, Portuguese

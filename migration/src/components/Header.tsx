@@ -1,0 +1,199 @@
+import { useState, useEffect, useRef } from "react";
+import { useLanguage } from "@/lib/language";
+import { useAuth } from "@/hooks/useAuth";
+import { useAppRouter } from "@/hooks/useAppRouter";
+import { LANGUAGES } from "@/lib/i18n";
+import { useLangPath } from "@/hooks/useLangPath";
+import { NAV_LINKS } from "@/lib/nav-links";
+import { Button } from "@/components/ui/button";
+import { AppLink } from "@/components/AppLink";
+import { Menu, X, Globe, LogOut, LogIn, Search } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import logo from "@/assets/logo.png";
+
+export default function Header({ onSearchOpen }: { onSearchOpen?: () => void }) {
+  const { t, lang, setLang } = useLanguage();
+  const { user, isAdmin, signOut } = useAuth();
+  const router = useAppRouter();
+  const langTo = useLangPath();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
+
+  const routePath = router.pathname.replace(/^\/[a-z]{2}(\/|$)/, "/");
+
+  // Close language dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+    };
+    if (langOpen) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [langOpen]);
+
+  // Focus trap for mobile menu
+  useEffect(() => {
+    if (!mobileOpen || !mobileMenuRef.current) return;
+    const menu = mobileMenuRef.current;
+    const focusable = menu.querySelectorAll<HTMLElement>('a, button, input, [tabindex]:not([tabindex="-1"])');
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first.focus();
+    const trap = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setMobileOpen(false); mobileToggleRef.current?.focus(); return; }
+      if (e.key !== "Tab") return;
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+      else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+    };
+    document.addEventListener("keydown", trap);
+    return () => document.removeEventListener("keydown", trap);
+  }, [mobileOpen]);
+
+  // Keyboard navigation for language dropdown
+  useEffect(() => {
+    if (!langOpen || !langRef.current) return;
+    const container = langRef.current;
+    const focusable = container.querySelectorAll<HTMLElement>("button");
+    if (focusable.length < 2) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const trap = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setLangOpen(false); return; }
+      if (e.key !== "Tab") return;
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+      else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+    };
+    document.addEventListener("keydown", trap);
+    return () => document.removeEventListener("keydown", trap);
+  }, [langOpen]);
+
+  return (
+    <header role="banner" className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+      <div className="container mx-auto flex items-center justify-between h-24 md:h-28 px-6">
+        <AppLink to={langTo("/")} className="flex items-center gap-3">
+          <img src={logo} alt="JD Product Stewardship Foundation" className="h-16 md:h-20 w-auto object-contain" decoding="async" fetchPriority="high" />
+        </AppLink>
+
+        {/* Desktop nav */}
+        <nav aria-label="Main navigation" className="hidden lg:flex items-center gap-8">
+          {NAV_LINKS.map(link => (
+            <AppLink
+              key={link.key}
+              to={langTo(link.path)}
+              aria-current={routePath === link.path ? "page" : undefined}
+              className={`text-sm font-medium tracking-wide transition-colors hover:text-gold ${routePath === link.path ? "text-gold" : "text-foreground/80"}`}
+            >
+              {t(link.key)}
+            </AppLink>
+          ))}
+          {isAdmin && (
+            <AppLink to={langTo("/admin")} aria-current={routePath.startsWith("/admin") ? "page" : undefined} className={`text-sm font-medium tracking-wide transition-colors hover:text-gold ${routePath.startsWith("/admin") ? "text-gold" : "text-foreground/80"}`}>
+              Admin
+            </AppLink>
+          )}
+        </nav>
+
+        <div className="hidden lg:flex items-center gap-3">
+          <ThemeToggle />
+          {onSearchOpen && (
+            <button onClick={onSearchOpen} className="flex items-center justify-center gap-1.5 text-sm text-foreground/70 hover:text-foreground transition-colors min-w-[44px] min-h-[44px]" aria-label={t("search.placeholder")}>
+              <Search className="w-4 h-4" />
+            </button>
+          )}
+          <div className="relative" ref={langRef}>
+            <button onClick={() => setLangOpen(!langOpen)} aria-expanded={langOpen} aria-haspopup="menu" aria-label={t("nav.language")} onKeyDown={(e) => e.key === "Escape" && setLangOpen(false)} className="flex items-center gap-1.5 text-sm text-foreground/70 hover:text-foreground transition-colors">
+              <Globe className="w-4 h-4" />
+              <span className="uppercase font-medium">{lang}</span>
+            </button>
+            {langOpen && (
+              <div role="menu" className="absolute right-0 top-full mt-2 bg-card border border-border rounded-md shadow-lg py-1 min-w-[140px]">
+                {LANGUAGES.map((l, idx) => (
+                  <button
+                    key={l.code}
+                    role="menuitem"
+                    tabIndex={idx === 0 ? 0 : -1}
+                    onClick={() => { setLang(l.code); setLangOpen(false); }}
+                    aria-label={l.label}
+                    onKeyDown={(e) => {
+                      const items = langRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]');
+                      if (!items) return;
+                      if (e.key === "ArrowDown") { e.preventDefault(); items[(idx + 1) % items.length].focus(); }
+                      else if (e.key === "ArrowUp") { e.preventDefault(); items[(idx - 1 + items.length) % items.length].focus(); }
+                      else if (e.key === "Escape") { setLangOpen(false); }
+                    }}
+                    className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${lang === l.code ? "text-gold font-medium" : "text-foreground/80"}`}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          {user ? (
+            <button onClick={async () => { await signOut(); router.push(langTo("/")); }} className="flex items-center justify-center gap-1.5 text-sm text-foreground/70 hover:text-foreground transition-colors min-w-[44px] min-h-[44px]" aria-label={t("auth.logout")} title={t("auth.logout")}>
+              <LogOut className="w-4 h-4" />
+            </button>
+          ) : (
+            <Button asChild variant="ghost" size="sm">
+              <AppLink to={langTo("/auth")}>
+                <LogIn className="w-4 h-4" />
+                {t("auth.login")}
+              </AppLink>
+            </Button>
+          )}
+        </div>
+
+        {/* Mobile toggle */}
+        <button ref={mobileToggleRef} onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-foreground" aria-label={mobileOpen ? t("nav.menu.close") : t("nav.menu.open")} aria-expanded={mobileOpen} aria-controls="mobile-nav">
+          {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <>
+          <div className="lg:hidden fixed inset-0 top-24 md:top-28 bg-black/40 z-[-1]" onClick={() => setMobileOpen(false)} aria-hidden="true" />
+          <div ref={mobileMenuRef} id="mobile-nav" className="lg:hidden bg-background border-b border-border">
+            <nav aria-label="Mobile navigation" className="flex flex-col px-6 py-4 gap-3">
+              {NAV_LINKS.map(link => (
+                <AppLink key={link.key} to={langTo(link.path)} onClick={() => setMobileOpen(false)} aria-current={routePath === link.path ? "page" : undefined} className={`text-sm font-medium py-2 transition-colors ${routePath === link.path ? "text-gold" : "text-foreground/80"}`}>
+                  {t(link.key)}
+                </AppLink>
+              ))}
+              {isAdmin && (
+                <AppLink to={langTo("/admin")} onClick={() => setMobileOpen(false)} className={`text-sm font-medium py-2 transition-colors ${routePath.startsWith("/admin") ? "text-gold" : "text-foreground/80"}`}>
+                  Admin
+                </AppLink>
+              )}
+              {onSearchOpen && (
+                <button onClick={() => { setMobileOpen(false); onSearchOpen(); }} className="text-sm font-medium py-2 text-foreground/80 text-left hover:text-foreground transition-colors flex items-center gap-2">
+                  <Search className="w-4 h-4" /> {t("search.placeholder")}
+                </button>
+              )}
+              {user ? (
+                <button onClick={async () => { setMobileOpen(false); await signOut(); router.push(langTo("/")); }} className="text-sm font-medium py-2 text-foreground/80 text-left hover:text-foreground transition-colors">
+                  {t("auth.logout")}
+                </button>
+              ) : (
+                <AppLink to={langTo("/auth")} onClick={() => setMobileOpen(false)} className="inline-flex items-center gap-2 text-sm font-medium py-2 text-gold hover:text-gold/80 transition-colors">
+                  <LogIn className="w-4 h-4" />
+                  {t("auth.login")}
+                </AppLink>
+              )}
+              <div className="flex gap-2 pt-3 border-t border-border">
+                {LANGUAGES.map(l => (
+                  <button key={l.code} onClick={() => { setLang(l.code); setMobileOpen(false); }} aria-label={l.label} className={`px-4 py-3 text-xs font-medium rounded-sm transition-colors min-h-[44px] min-w-[44px] ${lang === l.code ? "bg-gold text-accent-foreground" : "bg-muted text-foreground/60"}`}>
+                    {l.code.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </nav>
+          </div>
+        </>
+      )}
+    </header>
+  );
+}
